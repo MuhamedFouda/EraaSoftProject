@@ -1,8 +1,43 @@
+import { useRef, useState } from "react";
+import { useRecoilState } from "recoil";
+import { $Users } from "../../store";
 
 export default function Page404() {
+    const email =useRef()
+    const [users]=useRecoilState($Users)
+    
+    const [joinType, setJoinType] = useState();
+
+    function hendelChange(){
+        let emailVal =email.current.value;
+        let Patern=/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
+        let emailPaternCheck = Patern.test(emailVal)
+        if(emailPaternCheck){
+            CheckEmailExist(emailVal)
+        }else{
+            setJoinType();
+        }
+        // console.log(emailPaternCheck)
+    }
+
+    function CheckEmailExist(email){
+        let emailIndex=users.findIndex((user)=>{return user.email.toLowerCase()==email.toLowerCase()})
+        if (emailIndex == -1) {
+            console.log(emailIndex)
+            setJoinType("register");
+        }
+        else {
+            setJoinType("login");
+        }
+    }
     return (
-        <div id="Page404">Page 404</div>
-    )
+    <div id="Page404">
+      <div className="form-group">
+        <label htmlFor="usr">Email:</label>
+        <input type="text" className="form-control" id="usr" ref={email} onChange={hendelChange}/>
+      </div>
+    </div>
+  );
 }
 
 
@@ -86,7 +121,7 @@ export default function Page404() {
 //                                  <input type="password" class="login__input" placeholder="Password" />
 //                                  <input type="password" class="login__input" placeholder="ReEnter-Password" />
 //                              </div>
-                             
+
 //                              :
 //                              null
 //                             }
